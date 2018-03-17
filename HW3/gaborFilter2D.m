@@ -1,0 +1,40 @@
+function [filter_cos,filter_sin] = gaborFilter2D(T_f, theta, Sigma, len)
+% This function returns two 2D Gabor quadrature filters
+% (square matrices).
+%
+% ARGUMENTS
+% - T_f: spatial period in pixels
+% - theta: carrier orientation in degrees (0 corresponds
+% to oscillation along x-axis only)
+% - Sigma: covariance of Gaussian envelope
+% - len: output is len x len.
+%
+% OUTPUT
+% filter_cos, filter_sin: two 2d matrices containing the real part
+% and the imaginary part of the filter
+
+% Your code goes here %%%%%%%%%%%%%%%%%%%%%%
+% use gaussian2d.m
+
+%1d sampling vals 
+if (mod(len,2) == 0)
+    samplingVals = -(len-1)/2:1:(len-1)/2;
+else 
+    absVal = floor(len/2);
+    samplingVals = -absVal:1:absVal;
+end
+
+%2d sampling vals
+x1 = ones(len,len).*samplingVals;
+x2 = ones(len,len).*samplingVals';
+
+%get the gaussians 
+gaussian = gaussian2d(Sigma,len); 
+
+%get the gabors 
+freq = (2*pi)/T_f;
+filter_cos = gaussian .* cos(freq*(x1.*cos(theta)+x2.*sin(theta)));
+filter_sin = gaussian .* sin(freq*(x1.*cos(theta)+x2.*sin(theta))); 
+
+% End of your code %%%%%%%%%%%%%%%%%%%%%%%%%
+
